@@ -4,6 +4,7 @@ public class Projectile : MonoBehaviour
 {
     public float lifetime = 5f;
     public Transform target; // Assign the target this projectile should face
+    public float speed = 10f; // Speed of the projectile
 
     void Start()
     {
@@ -13,6 +14,12 @@ public class Projectile : MonoBehaviour
         }
 
         Destroy(gameObject, lifetime);
+    }
+
+    void Update()
+    {
+        // Move forward in the direction it is facing
+        transform.position += transform.forward * speed * Time.deltaTime;
     }
 
     void OnTriggerEnter(Collider other)

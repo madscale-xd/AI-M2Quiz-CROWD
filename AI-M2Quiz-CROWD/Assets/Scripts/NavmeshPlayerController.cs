@@ -41,7 +41,7 @@ public class NavmeshPlayerController : MonoBehaviour
             Debug.Log("NavMesh Player hit by bullet! Movement paused.");
 
             // Restart pause coroutine (reset timer)
-            pauseCoroutine = StartCoroutine(ResumeAfterDelay(1.5f));
+            pauseCoroutine = StartCoroutine(ResumeAfterDelay(1f));
         }
     }
 

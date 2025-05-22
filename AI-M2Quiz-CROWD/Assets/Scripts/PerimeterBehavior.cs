@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PerimeterBehavior : MonoBehaviour
 {
     private static bool perimeterActivated = false;
+    private static bool rotatingClockwise = false;
     private static List<PerimeterBehavior> allAgents = new List<PerimeterBehavior>();
 
     public float fireInterval = 5f;
@@ -18,6 +19,11 @@ public class PerimeterBehavior : MonoBehaviour
     private Color originalColor;
 
     private float hue = 0f;
+
+    private int followAgentIndex = -1;
+    private Vector3 currentTargetPosition;
+
+    private bool fireRateIncreased = false;
 
     void Start()
     {
@@ -33,10 +39,21 @@ public class PerimeterBehavior : MonoBehaviour
 
     void Update()
     {
-        // Centralized time check
-        if (!perimeterActivated && SceneTimerManager.SceneTime >= 15f)
+        if (!perimeterActivated && SceneTimerManager.SceneTime >= 30.4f)
         {
             ActivatePerimeterMode();
+        }
+
+        if (perimeterActivated && !rotatingClockwise && SceneTimerManager.SceneTime >= 57.2f)
+        {
+            StartRotatingPerimeter();
+        }
+
+        // ✅ Move this outside and check it independently
+        if (!fireRateIncreased && SceneTimerManager.SceneTime >= 57.2f)
+        {
+            fireInterval *= 0.5f; // Halve the interval (double the firing rate)
+            fireRateIncreased = true;
         }
 
         if (perimeterActivated)
@@ -50,6 +67,11 @@ public class PerimeterBehavior : MonoBehaviour
             }
 
             RainbowEffect();
+        }
+
+        if (rotatingClockwise)
+        {
+            MoveTowardsNextAgent();
         }
     }
 
@@ -66,6 +88,34 @@ public class PerimeterBehavior : MonoBehaviour
                 flee.enabled = false;
 
             agent.MoveToPerimeterPosition();
+        }
+    }
+
+    private void StartRotatingPerimeter()
+    {
+        rotatingClockwise = true;
+
+        for (int i = 0; i < allAgents.Count; i++)
+        {
+            int rightNeighborIndex = (i + 1) % allAgents.Count;
+            allAgents[i].followAgentIndex = rightNeighborIndex;
+            allAgents[i].currentTargetPosition = allAgents[rightNeighborIndex].transform.position;
+        }
+    }
+
+    private void MoveTowardsNextAgent()
+    {
+        if (followAgentIndex < 0 || followAgentIndex >= allAgents.Count)
+            return;
+
+        Vector3 targetPos = allAgents[followAgentIndex].transform.position;
+        float distance = Vector3.Distance(transform.position, targetPos);
+
+        // Don't reset destination if already close
+        if (distance > 1.5f)
+        {
+            agent.SetDestination(targetPos);
+            currentTargetPosition = targetPos;
         }
     }
 

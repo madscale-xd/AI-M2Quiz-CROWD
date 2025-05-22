@@ -163,7 +163,7 @@ MonoBehaviour:
   target: {fileID: 0}
   fleeDistance: 15
   projectilePrefab: {fileID: 5061657961856299570, guid: 2970db2852b6716479230eb1c6491a8f, type: 3}
-  shootCooldown: 3
+  shootCooldown: 3.2
   firePoint: {fileID: 0}
 --- !u!114 &-4513958188196296721
 MonoBehaviour:
@@ -177,6 +177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5199823aa29f1d045bd2c13e0e21753c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireInterval: 5
+  fireInterval: 3.2
   projectilePrefab: {fileID: 5061657961856299570, guid: 2970db2852b6716479230eb1c6491a8f, type: 3}
   firePoint: {fileID: 0}
